@@ -1,11 +1,12 @@
 import { useExpenses } from '../context/ExpenseContext';
-import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm } from 'react-icons/fa';
+import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaShoppingBag } from 'react-icons/fa';
 
 const categoryIcons = {
   Food: <FaUtensils />,
   Travel: <FaPlane />,
   Studies: <FaBook />,
   Entertainment: <FaFilm />,
+  Shopping: <FaShoppingBag />,
   Others: <FaEllipsisH />
 };
 

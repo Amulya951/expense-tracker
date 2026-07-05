@@ -4,10 +4,11 @@ import { FaPlus } from 'react-icons/fa';
 import CustomSelect from './CustomSelect';
 
 const CATEGORIES = {
-  Food: ['Beverages', 'Groceries', 'Snacks', 'Maggie', 'Others'],
+  Food: ['Meal', 'Beverages', 'Groceries', 'Snacks', 'Maggie', 'Others'],
   Travel: ['Auto', 'Cab', 'Metro', 'Others'],
   Studies: ['Books', 'Tuition', 'Supplies', 'Courses', 'Others'],
   Entertainment: ['Movies', 'Games', 'Concerts', 'Others'],
+  Shopping: ['Clothing', 'Electronics', 'Accessories', 'Others'],
   Others: [] // Special case for custom input
 };
 

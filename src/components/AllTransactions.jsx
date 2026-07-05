@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
-import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaArrowLeft, FaSortAmountDown, FaSortAmountUp, FaSortAlphaDown } from 'react-icons/fa';
+import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaArrowLeft, FaSortAmountDown, FaSortAmountUp, FaSortAlphaDown, FaShoppingBag } from 'react-icons/fa';
 
 const categoryIcons = {
   Food: <FaUtensils />,
   Travel: <FaPlane />,
   Studies: <FaBook />,
   Entertainment: <FaFilm />,
+  Shopping: <FaShoppingBag />,
   Others: <FaEllipsisH />
 };
 
