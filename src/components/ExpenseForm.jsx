@@ -3,7 +3,7 @@ import { useExpenses } from '../context/ExpenseContext';
 import { FaPlus } from 'react-icons/fa';
 import CustomSelect from './CustomSelect';
 
-const CATEGORIES = {
+export const CATEGORIES = {
   Food: ['Meal', 'Beverages', 'Groceries', 'Snacks', 'Maggie', 'Others'],
   Travel: ['Auto', 'Cab', 'Metro', 'Others'],
   Studies: ['Books', 'Tuition', 'Supplies', 'Courses', 'Others'],

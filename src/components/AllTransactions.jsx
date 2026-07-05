@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
 import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaArrowLeft, FaSortAmountDown, FaSortAmountUp, FaSortAlphaDown, FaShoppingBag } from 'react-icons/fa';
+import CustomSelect from './CustomSelect';
+import { CATEGORIES } from './ExpenseForm';
 
 const categoryIcons = {
   Food: <FaUtensils />,
@@ -13,9 +15,38 @@ const categoryIcons = {
 
 export default function AllTransactions({ onBack }) {
   const { expenses, deleteExpense } = useExpenses();
-  const [sortBy, setSortBy] = useState('date-desc'); // date-desc, date-asc, amount-desc, amount-asc, category
+  const [sortBy, setSortBy] = useState('date-desc');
+  const [filterCategory, setFilterCategory] = useState('All Categories');
+  const [filterSubCategory, setFilterSubCategory] = useState('All Subcategories');
 
-  const sortedExpenses = [...expenses].sort((a, b) => {
+  // Available categories for filter dropdown
+  const categoryOptions = ['All Categories', ...Object.keys(CATEGORIES)];
+  
+  // Available subcategories based on selected category
+  const subCategoryOptions = ['All Subcategories'];
+  if (filterCategory !== 'All Categories' && CATEGORIES[filterCategory]) {
+    subCategoryOptions.push(...CATEGORIES[filterCategory]);
+  }
+
+  // Handle category change (reset subcategory)
+  const handleCategoryFilter = (cat) => {
+    setFilterCategory(cat);
+    setFilterSubCategory('All Subcategories');
+  };
+
+  // Filter expenses
+  const filteredExpenses = expenses.filter(expense => {
+    if (filterCategory !== 'All Categories' && expense.category !== filterCategory) {
+      return false;
+    }
+    if (filterSubCategory !== 'All Subcategories' && expense.description !== filterSubCategory) {
+      return false;
+    }
+    return true;
+  });
+
+  // Sort filtered expenses
+  const sortedExpenses = [...filteredExpenses].sort((a, b) => {
     switch (sortBy) {
       case 'date-desc':
         return new Date(b.date) - new Date(a.date);
@@ -48,6 +79,29 @@ export default function AllTransactions({ onBack }) {
           <FaArrowLeft />
         </button>
         <h2 style={{ margin: 0, flex: 1 }}>All Transactions</h2>
+      </div>
+
+      <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--card-border)' }}>
+        <div className="flex gap-4">
+          <div style={{ flex: 1 }}>
+            <CustomSelect 
+              label="Filter by Category"
+              value={filterCategory} 
+              onChange={handleCategoryFilter} 
+              options={categoryOptions}
+            />
+          </div>
+          {filterCategory !== 'All Categories' && filterCategory !== 'Others' && (
+            <div style={{ flex: 1 }}>
+              <CustomSelect 
+                label="Filter by Subcategory"
+                value={filterSubCategory} 
+                onChange={setFilterSubCategory} 
+                options={subCategoryOptions}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex gap-2" style={{ padding: '12px 24px', overflowX: 'auto', borderBottom: '1px solid var(--card-border)' }}>
@@ -83,7 +137,7 @@ export default function AllTransactions({ onBack }) {
       
       <div style={{ padding: '12px 24px', flex: 1, overflowY: 'auto' }}>
         {sortedExpenses.length === 0 ? (
-          <p className="text-center text-secondary" style={{ marginTop: '24px' }}>No transactions found.</p>
+          <p className="text-center text-secondary" style={{ marginTop: '24px' }}>No transactions found for these filters.</p>
         ) : (
           sortedExpenses.map((expense) => (
             <div key={expense.id} className="expense-item">
