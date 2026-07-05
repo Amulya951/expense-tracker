@@ -45,6 +45,9 @@ export default function AllTransactions({ onBack }) {
     return true;
   });
 
+  // Calculate total for filtered view
+  const totalFilteredAmount = filteredExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+
   // Sort filtered expenses
   const sortedExpenses = [...filteredExpenses].sort((a, b) => {
     switch (sortBy) {
@@ -121,6 +124,11 @@ export default function AllTransactions({ onBack }) {
         </button>
       </div>
       
+      <div className="flex justify-between items-center" style={{ padding: '12px 24px', borderBottom: '1px solid var(--card-border)' }}>
+        <span className="text-secondary" style={{ fontSize: '0.9rem' }}>Total for this view:</span>
+        <h3 style={{ margin: 0, color: 'var(--accent-color)' }}>₹{totalFilteredAmount.toLocaleString()}</h3>
+      </div>
+
       <div style={{ padding: '12px 24px', flex: 1, overflowY: 'auto' }}>
         {sortedExpenses.length === 0 ? (
           <p className="text-center text-secondary" style={{ marginTop: '24px' }}>No transactions found for these filters.</p>
