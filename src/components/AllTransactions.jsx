@@ -25,8 +25,14 @@ export default function AllTransactions({ onBack }) {
         return b.amount - a.amount;
       case 'amount-asc':
         return a.amount - b.amount;
-      case 'category':
-        return a.category.localeCompare(b.category);
+      case 'category-asc':
+        return a.category.localeCompare(b.category) || a.description.localeCompare(b.description);
+      case 'category-desc':
+        return b.category.localeCompare(a.category) || b.description.localeCompare(a.description);
+      case 'subcategory-asc':
+        return a.description.localeCompare(b.description);
+      case 'subcategory-desc':
+        return b.description.localeCompare(a.description);
       default:
         return 0;
     }
@@ -60,11 +66,18 @@ export default function AllTransactions({ onBack }) {
           {sortBy === 'amount-desc' ? <FaSortAmountDown /> : <FaSortAmountUp />} Amount
         </button>
         <button 
-          className={`btn-primary ${sortBy === 'category' ? 'active' : ''}`}
-          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy === 'category' ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
-          onClick={() => setSortBy('category')}
+          className={`btn-primary ${sortBy.includes('category') ? 'active' : ''}`}
+          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('category') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
+          onClick={() => setSortBy(sortBy === 'category-asc' ? 'category-desc' : 'category-asc')}
         >
-          <FaSortAlphaDown /> Category
+          {sortBy === 'category-desc' ? <FaSortAmountDown /> : <FaSortAlphaDown />} Category
+        </button>
+        <button 
+          className={`btn-primary ${sortBy.includes('subcategory') ? 'active' : ''}`}
+          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('subcategory') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
+          onClick={() => setSortBy(sortBy === 'subcategory-asc' ? 'subcategory-desc' : 'subcategory-asc')}
+        >
+          {sortBy === 'subcategory-desc' ? <FaSortAmountDown /> : <FaSortAlphaDown />} Subcategory
         </button>
       </div>
       
