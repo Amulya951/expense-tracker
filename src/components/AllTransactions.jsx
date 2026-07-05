@@ -119,20 +119,6 @@ export default function AllTransactions({ onBack }) {
         >
           {sortBy === 'amount-desc' ? <FaSortAmountDown /> : <FaSortAmountUp />} Amount
         </button>
-        <button 
-          className={`btn-primary ${sortBy.includes('category') ? 'active' : ''}`}
-          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('category') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
-          onClick={() => setSortBy(sortBy === 'category-asc' ? 'category-desc' : 'category-asc')}
-        >
-          {sortBy === 'category-desc' ? <FaSortAmountDown /> : <FaSortAlphaDown />} Category
-        </button>
-        <button 
-          className={`btn-primary ${sortBy.includes('subcategory') ? 'active' : ''}`}
-          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('subcategory') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
-          onClick={() => setSortBy(sortBy === 'subcategory-asc' ? 'subcategory-desc' : 'subcategory-asc')}
-        >
-          {sortBy === 'subcategory-desc' ? <FaSortAmountDown /> : <FaSortAlphaDown />} Subcategory
-        </button>
       </div>
       
       <div style={{ padding: '12px 24px', flex: 1, overflowY: 'auto' }}>
