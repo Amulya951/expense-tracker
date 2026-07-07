@@ -24,7 +24,7 @@ function AppContent() {
 
   return (
     <div style={{ width: '100%', maxWidth: '100%' }}>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 app-header">
         <div className="flex items-center gap-3">
           {user.photoURL ? (
             <img src={user.photoURL} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />

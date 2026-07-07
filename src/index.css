@@ -317,3 +317,20 @@ input::placeholder, textarea::placeholder {
   background: rgba(139, 92, 246, 0.1);
   font-weight: 500;
 }
+
+/* App Header Layout */
+.app-header {
+  width: 100%;
+  z-index: 50;
+}
+
+@media (min-width: 900px) {
+  .app-header {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    width: auto;
+    margin-bottom: 0 !important;
+  }
+}
