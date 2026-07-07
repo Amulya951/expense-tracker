@@ -23,7 +23,7 @@
 
 body {
   background-color: var(--bg-color);
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
   color: var(--text-primary);
@@ -59,7 +59,9 @@ body {
 }
 
 /* Typography */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -70,7 +72,9 @@ h1, h2, h3 {
 }
 
 /* Forms and Inputs */
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 12px 16px;
   margin-bottom: 16px;
@@ -93,11 +97,14 @@ select {
   padding-right: 36px;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   border-color: var(--accent-color);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--text-secondary);
 }
 
@@ -169,8 +176,13 @@ input::placeholder, textarea::placeholder {
   font-size: 1.1rem;
 }
 
-.amount-positive { color: var(--success-color); }
-.amount-negative { color: var(--danger-color); }
+.amount-positive {
+  color: var(--success-color);
+}
+
+.amount-negative {
+  color: var(--danger-color);
+}
 
 /* Progress Bar */
 .progress-container {
@@ -191,8 +203,15 @@ input::placeholder, textarea::placeholder {
 
 /* Animations */
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-slide-in {
@@ -223,15 +242,41 @@ input::placeholder, textarea::placeholder {
 }
 
 /* Utilities */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: 8px; }
-.gap-4 { gap: 16px; }
-.mt-4 { margin-top: 16px; }
-.mb-2 { margin-bottom: 8px; }
-.text-center { text-align: center; }
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
 
 /* Custom Select Component Styles */
 .custom-select-container {
