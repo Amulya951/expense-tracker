@@ -47,18 +47,21 @@ export function ExpenseProvider({ children }) {
     if (!user) return;
 
     setLoading(true);
-    // Listen to expenses collection scoped to the logged-in user
+    // Fetch only the current user's expenses (removing orderBy to avoid Firebase composite index requirement)
     const q = query(
       collection(db, 'expenses'), 
-      where('userId', '==', user.uid),
-      orderBy('date', 'desc')
+      where('userId', '==', user.uid)
     );
     
     const unsubscribeExpenses = onSnapshot(q, (snapshot) => {
-      const expensesData = snapshot.docs.map(docSnap => ({
+      let expensesData = snapshot.docs.map(docSnap => ({
         id: docSnap.id,
         ...docSnap.data()
       }));
+      
+      // Sort locally by date descending
+      expensesData.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
       setExpenses(expensesData);
       setLoading(false);
     }, (error) => {
