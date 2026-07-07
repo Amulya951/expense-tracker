@@ -32,7 +32,7 @@ function AppContent() {
             <FaUserCircle size={40} color="var(--text-secondary)" />
           )}
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Hi, {user.displayName || 'User'}</h3>
+            <h3 className="shine-text" style={{ margin: 0, fontSize: '1.2rem' }}>Hi, {user.displayName || 'User'}</h3>
           </div>
         </div>
         <button 
