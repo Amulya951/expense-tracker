@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
-import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaArrowLeft, FaSortAmountDown, FaSortAmountUp, FaSortAlphaDown, FaShoppingBag } from 'react-icons/fa';
+import { FaUtensils, FaPlane, FaBook, FaEllipsisH, FaTrash, FaFilm, FaArrowLeft, FaSortAmountDown, FaSortAmountUp, FaShoppingBag, FaCalendarDay } from 'react-icons/fa';
 import CustomSelect from './CustomSelect';
 import { CATEGORIES } from './ExpenseForm';
 
@@ -18,6 +18,8 @@ export default function AllTransactions({ onBack }) {
   const [sortBy, setSortBy] = useState('date-desc');
   const [filterCategory, setFilterCategory] = useState('All Categories');
   const [filterSubCategory, setFilterSubCategory] = useState('All Subcategories');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
   // Available categories for filter dropdown
   const categoryOptions = ['All Categories', ...Object.keys(CATEGORIES)];
@@ -34,6 +36,12 @@ export default function AllTransactions({ onBack }) {
     setFilterSubCategory('All Subcategories');
   };
 
+  const setToday = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setFromDate(today);
+    setToDate(today);
+  };
+
   // Filter expenses
   const filteredExpenses = expenses.filter(expense => {
     if (filterCategory !== 'All Categories' && expense.category !== filterCategory) {
@@ -42,6 +50,26 @@ export default function AllTransactions({ onBack }) {
     if (filterSubCategory !== 'All Subcategories' && expense.description !== filterSubCategory) {
       return false;
     }
+    
+    // Date filtering
+    if (fromDate || toDate) {
+      const expDate = new Date(expense.date);
+      // Reset time to start of day for comparison
+      expDate.setHours(0, 0, 0, 0);
+      
+      if (fromDate) {
+        const fDate = new Date(fromDate);
+        fDate.setHours(0, 0, 0, 0);
+        if (expDate < fDate) return false;
+      }
+      
+      if (toDate) {
+        const tDate = new Date(toDate);
+        tDate.setHours(0, 0, 0, 0);
+        if (expDate > tDate) return false;
+      }
+    }
+    
     return true;
   });
 
@@ -53,22 +81,12 @@ export default function AllTransactions({ onBack }) {
     switch (sortBy) {
       case 'date-desc':
         return new Date(b.date) - new Date(a.date);
-      case 'date-asc':
-        return new Date(a.date) - new Date(b.date);
       case 'amount-desc':
         return b.amount - a.amount;
       case 'amount-asc':
         return a.amount - b.amount;
-      case 'category-asc':
-        return a.category.localeCompare(b.category) || a.description.localeCompare(b.description);
-      case 'category-desc':
-        return b.category.localeCompare(a.category) || b.description.localeCompare(a.description);
-      case 'subcategory-asc':
-        return a.description.localeCompare(b.description);
-      case 'subcategory-desc':
-        return b.description.localeCompare(a.description);
       default:
-        return 0;
+        return new Date(b.date) - new Date(a.date);
     }
   });
 
@@ -85,7 +103,7 @@ export default function AllTransactions({ onBack }) {
       </div>
 
       <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--card-border)' }}>
-        <div className="flex gap-4">
+        <div className="flex gap-4 mb-4">
           <div style={{ flex: 1 }}>
             <CustomSelect 
               label="Filter by Category"
@@ -105,16 +123,38 @@ export default function AllTransactions({ onBack }) {
             </div>
           )}
         </div>
+        
+        <div className="flex gap-4 items-end">
+          <div style={{ flex: 1 }}>
+            <label className="text-secondary" style={{ display: 'block', marginBottom: '4px', fontSize: '0.9rem' }}>From Date</label>
+            <input 
+              type="date" 
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              style={{ padding: '8px', width: '100%' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label className="text-secondary" style={{ display: 'block', marginBottom: '4px', fontSize: '0.9rem' }}>To Date</label>
+            <input 
+              type="date" 
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              style={{ padding: '8px', width: '100%' }}
+            />
+          </div>
+          <button 
+            onClick={setToday}
+            className="btn-primary"
+            style={{ padding: '8px 16px', width: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <FaCalendarDay /> Today
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2" style={{ padding: '12px 24px', overflowX: 'auto', borderBottom: '1px solid var(--card-border)' }}>
-        <button 
-          className={`btn-primary ${sortBy.includes('date') ? 'active' : ''}`}
-          style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('date') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
-          onClick={() => setSortBy(sortBy === 'date-desc' ? 'date-asc' : 'date-desc')}
-        >
-          {sortBy === 'date-desc' ? <FaSortAmountDown /> : <FaSortAmountUp />} Date
-        </button>
+        <span className="text-secondary" style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }}>Sort by:</span>
         <button 
           className={`btn-primary ${sortBy.includes('amount') ? 'active' : ''}`}
           style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: sortBy.includes('amount') ? 'var(--accent-color)' : 'rgba(15, 23, 42, 0.6)' }}
@@ -122,6 +162,15 @@ export default function AllTransactions({ onBack }) {
         >
           {sortBy === 'amount-desc' ? <FaSortAmountDown /> : <FaSortAmountUp />} Amount
         </button>
+        {sortBy.includes('amount') && (
+           <button 
+             className="btn-primary"
+             style={{ padding: '8px 12px', width: 'auto', fontSize: '0.8rem', background: 'rgba(15, 23, 42, 0.6)' }}
+             onClick={() => setSortBy('date-desc')}
+           >
+             Clear Sort
+           </button>
+        )}
       </div>
       
       <div className="flex justify-between items-center" style={{ padding: '12px 24px', borderBottom: '1px solid var(--card-border)' }}>

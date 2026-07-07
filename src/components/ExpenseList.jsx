@@ -13,7 +13,7 @@ const categoryIcons = {
 export default function ExpenseList({ onViewAll }) {
   const { expenses, deleteExpense } = useExpenses();
 
-  const recentExpenses = expenses.slice(0, 20);
+  const recentExpenses = expenses.slice(0, 7);
 
   if (expenses.length === 0) {
     return (
@@ -27,7 +27,7 @@ export default function ExpenseList({ onViewAll }) {
     <div className="glass-card" style={{ padding: '0' }}>
       <div className="flex justify-between items-center" style={{ padding: '24px 24px 0 24px' }}>
         <h3 style={{ margin: 0 }}>Recent Transactions</h3>
-        {expenses.length > 20 && (
+        {expenses.length > 7 && (
           <button 
             onClick={onViewAll}
             style={{ background: 'none', border: 'none', color: 'var(--accent-color)', cursor: 'pointer', fontSize: '0.9rem' }}
@@ -70,7 +70,7 @@ export default function ExpenseList({ onViewAll }) {
         ))}
       </div>
       
-      {expenses.length <= 20 && expenses.length > 0 && (
+      {expenses.length <= 7 && expenses.length > 0 && (
         <div className="text-center" style={{ padding: '0 24px 24px 24px' }}>
           <button 
             onClick={onViewAll}

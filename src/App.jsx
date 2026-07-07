@@ -3,17 +3,49 @@ import Dashboard from './components/Dashboard';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import AllTransactions from './components/AllTransactions';
-import { ExpenseProvider } from './context/ExpenseContext';
+import Auth from './components/Auth';
+import { ExpenseProvider, useExpenses } from './context/ExpenseContext';
+import { auth } from './firebase';
+import { signOut } from 'firebase/auth';
+import { FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 import './index.css';
 
-function App() {
-  const [view, setView] = useState('home'); // 'home' | 'transactions'
+function AppContent() {
+  const { user, loading } = useExpenses();
+  const [view, setView] = useState('home');
+
+  if (loading) {
+    return <div className="text-center text-secondary" style={{ marginTop: '40px' }}>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Auth />;
+  }
 
   return (
-    <ExpenseProvider>
+    <div style={{ width: '100%', maxWidth: '100%' }}>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          {user.photoURL ? (
+            <img src={user.photoURL} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+          ) : (
+            <FaUserCircle size={40} color="var(--text-secondary)" />
+          )}
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Hi, {user.displayName || 'User'}</h3>
+          </div>
+        </div>
+        <button 
+          onClick={() => signOut(auth)}
+          style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px' }}
+          title="Logout"
+        >
+          <FaSignOutAlt size={20} />
+        </button>
+      </div>
+
       {view === 'home' ? (
         <div className="animate-slide-in" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-          <h1 className="text-center" style={{ marginBottom: '0' }}>My Expenses</h1>
           <Dashboard />
           <ExpenseForm />
           <ExpenseList onViewAll={() => setView('transactions')} />
@@ -21,6 +53,14 @@ function App() {
       ) : (
         <AllTransactions onBack={() => setView('home')} />
       )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ExpenseProvider>
+      <AppContent />
     </ExpenseProvider>
   );
 }
