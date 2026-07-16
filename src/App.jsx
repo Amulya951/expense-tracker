@@ -4,6 +4,7 @@ import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import AllTransactions from './components/AllTransactions';
 import Auth from './components/Auth';
+import ResetPassword from './components/ResetPassword';
 import { ExpenseProvider, useExpenses } from './context/ExpenseContext';
 import { auth } from './firebase';
 import { signOut } from 'firebase/auth';
@@ -13,9 +14,20 @@ import './index.css';
 function AppContent() {
   const { user, loading } = useExpenses();
   const [view, setView] = useState('home');
+  const [isResetPasswordRoute, setIsResetPasswordRoute] = useState(
+    window.location.pathname === '/reset-password' || 
+    window.location.search.includes('mode=resetPassword')
+  );
 
   if (loading) {
     return <div className="text-center text-secondary" style={{ marginTop: '40px' }}>Loading...</div>;
+  }
+
+  if (isResetPasswordRoute) {
+    return <ResetPassword onBackToLogin={() => {
+      setIsResetPasswordRoute(false);
+      window.history.replaceState({}, document.title, '/');
+    }} />;
   }
 
   if (!user) {

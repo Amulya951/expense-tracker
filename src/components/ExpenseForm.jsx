@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaCalculator } from 'react-icons/fa';
 import CustomSelect from './CustomSelect';
+import Calculator from './Calculator';
 
 export const CATEGORIES = {
   Food: ['Meal', 'Beverages', 'Groceries', 'Snacks', 'Maggie', 'Others'],
@@ -19,6 +20,7 @@ export default function ExpenseForm() {
   const [subCategory, setSubCategory] = useState(CATEGORIES['Food'][0]);
   const [customDescription, setCustomDescription] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const handleCategoryChange = (newCat) => {
     setCategory(newCat);
@@ -53,15 +55,33 @@ export default function ExpenseForm() {
     <form className="glass-card" style={{ position: 'relative', zIndex: 50 }} onSubmit={handleSubmit}>
       <h3>Add Expense</h3>
       
-      <div className="mt-4">
+      <div className="mt-4 relative">
         <label className="text-secondary" style={{ display: 'block', marginBottom: '4px' }}>Amount (₹)</label>
-        <input 
-          type="number" 
-          placeholder="0.00" 
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          required
-        />
+        <div className="flex items-center gap-2">
+          <input 
+            type="number" 
+            placeholder="0.00" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            required
+            style={{ flex: 1 }}
+          />
+          <button 
+            type="button" 
+            onClick={() => setShowCalculator(!showCalculator)}
+            className="btn-primary flex items-center justify-center p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-accent transition-colors"
+            title="Open Calculator"
+            style={{ width: '48px', height: '48px' }}
+          >
+            <FaCalculator size={20} />
+          </button>
+        </div>
+        {showCalculator && (
+          <Calculator 
+            onApply={(val) => setAmount(val)} 
+            onClose={() => setShowCalculator(false)} 
+          />
+        )}
       </div>
 
       <div className="flex gap-4">

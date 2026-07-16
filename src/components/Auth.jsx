@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   sendPasswordResetEmail,
-  updateProfile
+  updateProfile,
+  sendEmailVerification
 } from 'firebase/auth';
 import { FaUserCircle, FaEnvelope, FaLock } from 'react-icons/fa';
 
@@ -34,6 +35,9 @@ export default function Auth() {
           displayName: name,
           photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`
         });
+        
+        await sendEmailVerification(user);
+        setMessage('Account created! Please check your email for a verification link.');
       }
     } catch (err) {
       setError(err.message);
@@ -48,7 +52,11 @@ export default function Auth() {
       return;
     }
     try {
-      await sendPasswordResetEmail(auth, email);
+      const actionCodeSettings = {
+        url: window.location.origin + '/reset-password',
+        handleCodeInApp: true
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setMessage('Password reset email sent! Check your inbox.');
       setError('');
     } catch (err) {
