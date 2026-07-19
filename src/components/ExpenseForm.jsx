@@ -13,19 +13,29 @@ export const CATEGORIES = {
   Others: [] // Special case for custom input
 };
 
+export const INCOME_CATEGORIES = {
+  Salary: ['Monthly', 'Bonus', 'Others'],
+  Allowance: ['Pocket Money', 'Others'],
+  Gift: ['Cash', 'Others'],
+  Others: []
+};
+
 export default function ExpenseForm() {
   const { addExpense } = useExpenses();
   const [amount, setAmount] = useState('');
+  const [transactionType, setTransactionType] = useState('expense');
   const [category, setCategory] = useState('Food');
   const [subCategory, setSubCategory] = useState(CATEGORIES['Food'][0]);
   const [customDescription, setCustomDescription] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [showCalculator, setShowCalculator] = useState(false);
 
+  const activeCategories = transactionType === 'expense' ? CATEGORIES : INCOME_CATEGORIES;
+
   const handleCategoryChange = (newCat) => {
     setCategory(newCat);
     if (newCat !== 'Others') {
-      setSubCategory(CATEGORIES[newCat][0]);
+      setSubCategory(activeCategories[newCat][0]);
     } else {
       setSubCategory('Custom');
     }
@@ -41,6 +51,7 @@ export default function ExpenseForm() {
     const finalDescription = (category === 'Others' || subCategory === 'Others') ? customDescription : subCategory;
 
     addExpense({
+      type: transactionType,
       amount: Number(amount),
       category,
       description: finalDescription,
@@ -53,9 +64,36 @@ export default function ExpenseForm() {
 
   return (
     <form className="glass-card" style={{ position: 'relative', zIndex: 50 }} onSubmit={handleSubmit}>
-      <h3>Add Expense</h3>
+      <h3>Add Transaction</h3>
       
-      <div className="mt-4 relative">
+      <div className="flex gap-2 mt-4 mb-4">
+        <button 
+          type="button"
+          onClick={() => {
+             setTransactionType('expense');
+             setCategory('Food');
+             setSubCategory(CATEGORIES['Food'][0]);
+          }}
+          className="btn-primary"
+          style={{ flex: 1, padding: '8px', background: transactionType === 'expense' ? '#ef4444' : 'rgba(15, 23, 42, 0.6)' }}
+        >
+          Expense
+        </button>
+        <button 
+          type="button"
+          onClick={() => {
+             setTransactionType('income');
+             setCategory('Salary');
+             setSubCategory(INCOME_CATEGORIES['Salary'][0]);
+          }}
+          className="btn-primary"
+          style={{ flex: 1, padding: '8px', background: transactionType === 'income' ? '#10b981' : 'rgba(15, 23, 42, 0.6)' }}
+        >
+          Income
+        </button>
+      </div>
+
+      <div className="relative">
         <label className="text-secondary" style={{ display: 'block', marginBottom: '4px' }}>Amount (₹)</label>
         <div className="flex items-center gap-2">
           <input 
@@ -90,7 +128,7 @@ export default function ExpenseForm() {
             label="Category"
             value={category} 
             onChange={handleCategoryChange} 
-            options={Object.keys(CATEGORIES)}
+            options={Object.keys(activeCategories)}
           />
         </div>
 
@@ -100,7 +138,7 @@ export default function ExpenseForm() {
               label="Subcategory"
               value={subCategory} 
               onChange={setSubCategory} 
-              options={CATEGORIES[category]}
+              options={activeCategories[category]}
             />
           </div>
         )}
@@ -144,7 +182,7 @@ export default function ExpenseForm() {
       )}
 
       <button type="submit" className="btn-primary mt-4">
-        <FaPlus /> Add Expense
+        <FaPlus /> Add {transactionType === 'expense' ? 'Expense' : 'Income'}
       </button>
     </form>
   );

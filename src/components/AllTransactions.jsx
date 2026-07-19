@@ -74,7 +74,8 @@ export default function AllTransactions({ onBack }) {
   });
 
   // Calculate total for filtered view
-  const totalFilteredAmount = filteredExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  const totalSpent = filteredExpenses.filter(e => e.type !== 'income').reduce((sum, exp) => sum + Number(exp.amount), 0);
+  const totalEarned = filteredExpenses.filter(e => e.type === 'income').reduce((sum, exp) => sum + Number(exp.amount), 0);
 
   // Sort filtered expenses
   const sortedExpenses = [...filteredExpenses].sort((a, b) => {
@@ -174,8 +175,17 @@ export default function AllTransactions({ onBack }) {
       </div>
       
       <div className="flex justify-between items-center" style={{ padding: '12px 24px', borderBottom: '1px solid var(--card-border)' }}>
-        <span className="text-secondary" style={{ fontSize: '0.9rem' }}>Total for this view:</span>
-        <h3 style={{ margin: 0, color: 'var(--accent-color)' }}>₹{totalFilteredAmount.toLocaleString()}</h3>
+        <span className="text-secondary" style={{ fontSize: '0.9rem' }}>Totals for this view:</span>
+        <div className="flex gap-4 text-right">
+          <div>
+             <span className="text-secondary" style={{ fontSize: '0.8rem', display: 'block' }}>Spent</span>
+             <h3 style={{ margin: 0, color: 'var(--danger-color)' }}>₹{totalSpent.toLocaleString()}</h3>
+          </div>
+          <div>
+             <span className="text-secondary" style={{ fontSize: '0.8rem', display: 'block' }}>Earned</span>
+             <h3 style={{ margin: 0, color: 'var(--success-color)' }}>₹{totalEarned.toLocaleString()}</h3>
+          </div>
+        </div>
       </div>
 
       <div style={{ padding: '12px 24px', flex: 1, overflowY: 'auto' }}>
@@ -196,8 +206,8 @@ export default function AllTransactions({ onBack }) {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <span className="expense-amount amount-negative">
-                  -₹{Number(expense.amount).toLocaleString()}
+                <span className={`expense-amount ${expense.type === 'income' ? 'amount-positive' : 'amount-negative'}`}>
+                  {expense.type === 'income' ? '+' : '-'}₹{Number(expense.amount).toLocaleString()}
                 </span>
                 <button 
                   onClick={() => deleteExpense(expense.id)}

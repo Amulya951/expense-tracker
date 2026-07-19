@@ -11,7 +11,7 @@ const categoryIcons = {
 };
 
 export default function ExpenseList({ onViewAll }) {
-  const { expenses, deleteExpense } = useExpenses();
+  const { monthlyExpenses: expenses, deleteExpense } = useExpenses();
 
   const recentExpenses = expenses.slice(0, 7);
 
@@ -52,8 +52,8 @@ export default function ExpenseList({ onViewAll }) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="expense-amount amount-negative">
-                -₹{Number(expense.amount).toLocaleString()}
+              <span className={`expense-amount ${expense.type === 'income' ? 'amount-positive' : 'amount-negative'}`}>
+                {expense.type === 'income' ? '+' : '-'}₹{Number(expense.amount).toLocaleString()}
               </span>
               <button 
                 onClick={() => deleteExpense(expense.id)}

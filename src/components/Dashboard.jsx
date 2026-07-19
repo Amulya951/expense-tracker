@@ -3,12 +3,12 @@ import { useExpenses } from '../context/ExpenseContext';
 import { FaMoneyBillWave, FaUtensils, FaPlane, FaBook, FaEllipsisH } from 'react-icons/fa';
 
 export default function Dashboard() {
-  const { totalExpenses, monthlyBudget, setMonthlyBudget } = useExpenses();
+  const { totalExpenses, totalIncome, monthlyBudget, setMonthlyBudget, currentMonth, setCurrentMonth } = useExpenses();
   const [isEditingBudget, setIsEditingBudget] = useState(false);
   const [tempBudget, setTempBudget] = useState(monthlyBudget);
 
-  const remaining = monthlyBudget - totalExpenses;
-  const progress = Math.min((totalExpenses / monthlyBudget) * 100, 100);
+  const remaining = monthlyBudget + totalIncome - totalExpenses;
+  const progress = Math.min((totalExpenses / (monthlyBudget + totalIncome)) * 100, 100);
   const isOverBudget = remaining < 0;
 
   const handleSaveBudget = () => {
@@ -19,7 +19,23 @@ export default function Dashboard() {
   return (
     <div className="glass-card">
       <div className="flex justify-between items-center mb-2">
-        <h2 style={{ margin: 0 }}>Budget Overview</h2>
+        <h2 style={{ margin: 0 }}>
+          <input 
+            type="month" 
+            value={currentMonth} 
+            onChange={(e) => setCurrentMonth(e.target.value)}
+            style={{ 
+              background: 'transparent', 
+              border: 'none', 
+              color: 'inherit', 
+              fontSize: 'inherit', 
+              fontWeight: 'inherit',
+              cursor: 'pointer',
+              padding: 0,
+              fontFamily: 'inherit'
+            }}
+          />
+        </h2>
         {isEditingBudget ? (
           <div className="flex gap-2">
             <input 
@@ -42,12 +58,16 @@ export default function Dashboard() {
 
       <div className="flex justify-between items-center mt-4">
         <div>
-          <p className="text-secondary">Total Spent</p>
-          <h3 style={{ fontSize: '1.8rem', margin: 0 }}>₹{totalExpenses.toLocaleString()}</h3>
+          <p className="text-secondary">Spent</p>
+          <h3 style={{ fontSize: '1.4rem', margin: 0 }}>₹{totalExpenses.toLocaleString()}</h3>
+        </div>
+        <div className="text-center">
+          <p className="text-secondary">Earned</p>
+          <h3 className="amount-positive" style={{ fontSize: '1.4rem', margin: 0 }}>₹{totalIncome.toLocaleString()}</h3>
         </div>
         <div className="text-right">
           <p className="text-secondary">Remaining</p>
-          <h3 className={isOverBudget ? 'amount-negative' : 'amount-positive'} style={{ fontSize: '1.8rem', margin: 0 }}>
+          <h3 className={isOverBudget ? 'amount-negative' : 'amount-positive'} style={{ fontSize: '1.4rem', margin: 0 }}>
             ₹{remaining.toLocaleString()}
           </h3>
         </div>

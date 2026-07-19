@@ -12,6 +12,7 @@ export function useExpenses() {
 export function ExpenseProvider({ children }) {
   const [user, setUser] = useState(null);
   const [expenses, setExpenses] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().slice(0, 7));
   const [monthlyBudget, setMonthlyBudget] = useState(50000);
   const [loading, setLoading] = useState(true);
 
@@ -116,17 +117,23 @@ export function ExpenseProvider({ children }) {
     }
   };
 
-  const totalExpenses = expenses.reduce((sum, item) => sum + Number(item.amount), 0);
+  const monthlyExpenses = expenses.filter(item => item.date.startsWith(currentMonth));
+  const totalExpenses = monthlyExpenses.filter(item => item.type !== 'income').reduce((sum, item) => sum + Number(item.amount), 0);
+  const totalIncome = monthlyExpenses.filter(item => item.type === 'income').reduce((sum, item) => sum + Number(item.amount), 0);
 
   return (
     <ExpenseContext.Provider value={{
       user,
       expenses,
+      monthlyExpenses,
+      currentMonth,
+      setCurrentMonth,
       addExpense,
       deleteExpense,
       monthlyBudget,
       setMonthlyBudget: updateMonthlyBudget,
       totalExpenses,
+      totalIncome,
       loading
     }}>
       {children}
